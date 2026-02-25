@@ -27,7 +27,7 @@ pipeline {
 
         stage('Deploy to DEV') {
             steps {
-                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                withCredentials([file(credentialsId: 'config', variable: 'KUBECONFIG')]) {
                     sh "sed -i 's/tag:.*/tag: ${DOCKER_TAG}/g' ./charts/values.yaml" 
                     sh "helm upgrade --install movie-app ./charts --namespace dev --create-namespace"
                 }
@@ -36,7 +36,7 @@ pipeline {
 
         stage('Deploy to QA') {
             steps {
-                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                withCredentials([file(credentialsId: 'config', variable: 'KUBECONFIG')]) {
                     sh "helm upgrade --install movie-app ./charts --namespace qa --create-namespace"
                 }
             }
@@ -44,7 +44,7 @@ pipeline {
 
         stage('Deploy to Staging') {
             steps {
-                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                withCredentials([file(credentialsId: 'config', variable: 'KUBECONFIG')]) {
                     sh "helm upgrade --install movie-app ./charts --namespace staging --create-namespace"
                 }
             }
@@ -58,7 +58,7 @@ pipeline {
                 timeout(time: 15, unit: 'MINUTES') {
                     input message: "Approuver le déploiement en Production ?", ok: "Déployer"
                 }
-                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                withCredentials([file(credentialsId: 'config', variable: 'KUBECONFIG')]) {
                     sh "helm upgrade --install movie-app ./charts --namespace prod --create-namespace"
                 }
             }
