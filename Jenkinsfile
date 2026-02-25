@@ -36,7 +36,7 @@ pipeline {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
                     // ATTENTION : Vérifie que ton dossier Helm s'appelle bien 'fastapi'
                     // On met à jour le tag dans le fichier values.yaml avant le déploiement
-                    sh "sed -i 's/tag:.*/tag: ${DOCKER_TAG}/g' ./movie-service/values.yaml" 
+                    sh "sed -i 's/tag:.*/tag: ${DOCKER_TAG}/g' ./charts/values.yaml" 
                     
                     // Déploiement avec Helm (ajuste le chemin du chart ./movie-service ou ./fastapi)
                     sh "helm upgrade --install movie-app ./movie-service --namespace dev --create-namespace"
